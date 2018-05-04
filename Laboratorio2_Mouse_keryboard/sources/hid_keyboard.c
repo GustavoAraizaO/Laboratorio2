@@ -134,9 +134,29 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
 				s_UsbDeviceHidKeyboard.buffer[2] = KEY_LEFT_GUI;
 				s_UsbDeviceHidKeyboard.buffer[3] = KEY_LEFTARROW;
 				FlagDIR = pdFALSE;
+				dir = WRITE;
 				counter = 0U;
 			}
 
+		}
+		break;
+	case WRITE:
+		counter++;
+		if (counter > 200U && counter < 202U)
+		{
+			s_UsbDeviceHidKeyboard.buffer[2] = KEY_H;
+			s_UsbDeviceHidKeyboard.buffer[3] = KEY_O;
+			s_UsbDeviceHidKeyboard.buffer[4] = KEY_L;
+			s_UsbDeviceHidKeyboard.buffer[5] = KEY_A;
+			s_UsbDeviceHidKeyboard.buffer[6] = KEY_SPACEBAR;
+		}
+		if (counter > 250U && counter < 252U)
+		{
+			s_UsbDeviceHidKeyboard.buffer[2] = KEY_M;
+			s_UsbDeviceHidKeyboard.buffer[3] = KEY_U;
+			s_UsbDeviceHidKeyboard.buffer[4] = KEY_N;
+			s_UsbDeviceHidKeyboard.buffer[5] = KEY_D;
+			s_UsbDeviceHidKeyboard.buffer[6] = KEY_O;
 		}
 
 		break;

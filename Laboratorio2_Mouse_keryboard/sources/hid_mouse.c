@@ -65,6 +65,7 @@ static usb_device_composite_struct_t *s_UsbDeviceComposite;
 static usb_device_hid_mouse_struct_t s_UsbDeviceHidMouse;
 extern uint8_t FlagLMouseSelect;
 extern uint8_t FlagMSpaint;
+uint8_t FlagMSpaintready = pdFALSE;
 
 /*******************************************************************************
  * Code
@@ -193,7 +194,7 @@ static usb_status_t USB_DeviceHidMouseAction(void)
 			{
 				dir = WAIT;
 				FlagMSpaint = pdFALSE;
-
+				FlagMSpaintready = pdTRUE;
 			}
 			break;
 		}
@@ -204,7 +205,7 @@ static usb_status_t USB_DeviceHidMouseAction(void)
 			s_UsbDeviceHidMouse.buffer[2] = 0U;
 			if (x > 2)
 			{
-				s_UsbDeviceHidMouse.buffer[0] = 1U;
+				s_UsbDeviceHidMouse.buffer[0] = 4U;
 				dir = WAIT;
 			}
 

@@ -63,6 +63,7 @@ static usb_status_t USB_DeviceHidKeyboardAction(void);
 USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t s_KeyboardBuffer[USB_HID_KEYBOARD_REPORT_LENGTH];
 static usb_device_composite_struct_t *s_UsbDeviceComposite;
 static usb_device_hid_keyboard_struct_t s_UsbDeviceHidKeyboard;
+extern uint8_t FlagMSpaintready;
 uint8_t FlagLMouseSelect = pdFALSE;
 uint8_t FlagMSpaint = pdFALSE;
 
@@ -122,6 +123,10 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
 		}
 		break;
 	case WAIT:
+		if (FlagMSpaintready)
+		{
+			dir = OPEN;
+		}
 		break;
 	case OPEN:
 		counter++;

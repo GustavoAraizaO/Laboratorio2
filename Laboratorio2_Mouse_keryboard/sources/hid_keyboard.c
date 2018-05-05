@@ -64,6 +64,7 @@ USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t s_KeyboardBuffer[
 static usb_device_composite_struct_t *s_UsbDeviceComposite;
 static usb_device_hid_keyboard_struct_t s_UsbDeviceHidKeyboard;
 uint8_t FlagLMouseSelect = pdFALSE;
+uint8_t FlagMSpaint = pdFALSE;
 
 /*******************************************************************************
  * Code
@@ -75,12 +76,14 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
 	static uint8_t FlagDIR = pdFALSE;
 	enum
 	{
+		PAINT,
+		WAIT,
 		OPEN,
 		LINEUP,
 		WRITE,
 		COPY_PASTE
 	};
-	static uint8_t dir = OPEN;
+	static uint8_t dir = PAINT;
 	s_UsbDeviceHidKeyboard.buffer[2] = 0x00U;
 	s_UsbDeviceHidKeyboard.buffer[3] = 0x00U;
 	s_UsbDeviceHidKeyboard.buffer[4] = 0x00U;
@@ -90,6 +93,36 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
 
 	switch (dir)
 	{
+	case PAINT:
+		counter++;
+		if (counter > 200U && counter < 202U)
+		{
+			s_UsbDeviceHidKeyboard.buffer[2] = KEY_LEFT_GUI;
+			s_UsbDeviceHidKeyboard.buffer[3] = KEY_R;
+		}
+		if (counter > 300U && counter < 302U)
+		{
+			s_UsbDeviceHidKeyboard.buffer[2] = KEY_M;
+			s_UsbDeviceHidKeyboard.buffer[3] = KEY_S;
+			s_UsbDeviceHidKeyboard.buffer[4] = KEY_P;
+			s_UsbDeviceHidKeyboard.buffer[5] = KEY_A;
+			s_UsbDeviceHidKeyboard.buffer[6] = KEY_I;
+			s_UsbDeviceHidKeyboard.buffer[7] = KEY_N;
+		}
+		if (counter > 310U && counter < 312U)
+		{
+			s_UsbDeviceHidKeyboard.buffer[2] = KEY_T;
+			s_UsbDeviceHidKeyboard.buffer[3] = KEY_ENTER;
+		}
+		if ( counter > 400U)
+		{
+			FlagMSpaint = pdTRUE;
+			dir = WAIT;
+			counter = 0U;
+		}
+		break;
+	case WAIT:
+		break;
 	case OPEN:
 		counter++;
 		if (counter > 200U && counter < 202U)

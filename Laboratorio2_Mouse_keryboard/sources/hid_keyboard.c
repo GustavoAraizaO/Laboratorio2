@@ -76,7 +76,8 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
 	{
 		OPEN,
 		LINEUP,
-		WRITE
+		WRITE,
+		COPY_PASTE
 	};
 	static uint8_t dir = OPEN;
 	s_UsbDeviceHidKeyboard.buffer[2] = 0x00U;
@@ -121,7 +122,7 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
 			if (counter > 100U && counter < 102U)
 			{
 				s_UsbDeviceHidKeyboard.buffer[2] = KEY_LEFT_GUI;
-				s_UsbDeviceHidKeyboard.buffer[3] = KEY_RIGHTARROW;
+				s_UsbDeviceHidKeyboard.buffer[3] = KEY_LEFTARROW;
 				FlagDIR = pdTRUE;
 				dir = OPEN;
 				counter = 0U;
@@ -132,7 +133,7 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
 			if (counter > 100U && counter < 102U)
 			{
 				s_UsbDeviceHidKeyboard.buffer[2] = KEY_LEFT_GUI;
-				s_UsbDeviceHidKeyboard.buffer[3] = KEY_LEFTARROW;
+				s_UsbDeviceHidKeyboard.buffer[3] = KEY_RIGHTARROW;
 				FlagDIR = pdFALSE;
 				dir = WRITE;
 				counter = 0U;
@@ -157,8 +158,22 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
 			s_UsbDeviceHidKeyboard.buffer[4] = KEY_N;
 			s_UsbDeviceHidKeyboard.buffer[5] = KEY_D;
 			s_UsbDeviceHidKeyboard.buffer[6] = KEY_O;
+			counter = 0U;
+			dir = COPY_PASTE;
 		}
+		break;
+	case COPY_PASTE:
+		counter++;
+		if (counter > 200U && counter < 202U)
+		{
+			s_UsbDeviceHidKeyboard.buffer[2] = KEY_LEFTCONTROL;
+			s_UsbDeviceHidKeyboard.buffer[3] = KEY_E;
+			s_UsbDeviceHidKeyboard.buffer[4] = KEY_COPY;
+		}
+		if (counter > 250U && counter < 252U)
+		{
 
+		}
 		break;
 	default:
 		break;

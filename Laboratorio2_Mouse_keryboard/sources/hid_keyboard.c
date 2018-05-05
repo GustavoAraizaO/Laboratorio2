@@ -63,6 +63,7 @@ static usb_status_t USB_DeviceHidKeyboardAction(void);
 USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t s_KeyboardBuffer[USB_HID_KEYBOARD_REPORT_LENGTH];
 static usb_device_composite_struct_t *s_UsbDeviceComposite;
 static usb_device_hid_keyboard_struct_t s_UsbDeviceHidKeyboard;
+uint8_t FlagLMouseSelect = pdFALSE;
 
 /*******************************************************************************
  * Code
@@ -168,11 +169,18 @@ static usb_status_t USB_DeviceHidKeyboardAction(void)
 		{
 			s_UsbDeviceHidKeyboard.buffer[2] = KEY_LEFTCONTROL;
 			s_UsbDeviceHidKeyboard.buffer[3] = KEY_E;
-			s_UsbDeviceHidKeyboard.buffer[4] = KEY_COPY;
 		}
 		if (counter > 250U && counter < 252U)
 		{
-
+			FlagLMouseSelect = pdTRUE;
+			s_UsbDeviceHidKeyboard.buffer[4] = KEY_LEFTCONTROL;
+			s_UsbDeviceHidKeyboard.buffer[5] = KEY_C;
+		}
+		if (counter > 500U && counter < 502U)
+		{
+			FlagLMouseSelect = pdFALSE;
+			s_UsbDeviceHidKeyboard.buffer[6] = KEY_LEFTCONTROL;
+			s_UsbDeviceHidKeyboard.buffer[7] = KEY_V;
 		}
 		break;
 	default:

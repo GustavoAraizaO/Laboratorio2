@@ -63,6 +63,7 @@ static usb_status_t USB_DeviceHidMouseAction(void);
 USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t s_MouseBuffer[USB_HID_MOUSE_REPORT_LENGTH];
 static usb_device_composite_struct_t *s_UsbDeviceComposite;
 static usb_device_hid_mouse_struct_t s_UsbDeviceHidMouse;
+extern uint8_t FlagLMouseSelect;
 
 /*******************************************************************************
  * Code
@@ -79,9 +80,11 @@ static usb_status_t USB_DeviceHidMouseAction(void)
 		DOWN,
 		LEFT,
 		UP,
-		WAIT
+		WAIT,
+		SELECT
 	};
 	static uint8_t dir = RIGHT;
+	s_UsbDeviceHidMouse.buffer[0] = 0U;
 
 	switch (dir)
 	{
@@ -128,6 +131,23 @@ static usb_status_t USB_DeviceHidMouseAction(void)
 	case WAIT:
 		s_UsbDeviceHidMouse.buffer[1] = 0U;
 		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		if (FlagLMouseSelect)
+		{
+			dir = SELECT;
+			x = 0U;
+			y = 0U;
+		}
+		break;
+	case SELECT:
+		x++;
+		s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(-2);
+		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		if (x > 2)
+		{
+			s_UsbDeviceHidMouse.buffer[0] = 4U;
+			dir = WAIT;
+		}
+
 		break;
 	default:
 		break;

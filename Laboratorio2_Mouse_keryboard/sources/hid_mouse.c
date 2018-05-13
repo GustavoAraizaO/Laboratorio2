@@ -35,20 +35,12 @@
 #include "usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
-
 #include "usb_device_class.h"
 #include "usb_device_hid.h"
-
 #include "usb_device_ch9.h"
 #include "usb_device_descriptor.h"
-
 #include "composite.h"
-
 #include "hid_mouse.h"
-
-/*******************************************************************************
- * Definitions
- ******************************************************************************/
 
 /*******************************************************************************
  * Prototypes
@@ -60,7 +52,8 @@ static usb_status_t USB_DeviceHidMouseAction(void);
  * Variables
  ******************************************************************************/
 
-USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t s_MouseBuffer[USB_HID_MOUSE_REPORT_LENGTH];
+USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE)
+static uint8_t s_MouseBuffer[USB_HID_MOUSE_REPORT_LENGTH];
 static usb_device_composite_struct_t *s_UsbDeviceComposite;
 static usb_device_hid_mouse_struct_t s_UsbDeviceHidMouse;
 extern uint8_t FlagLMouseSelect;
@@ -88,109 +81,126 @@ static usb_status_t USB_DeviceHidMouseAction(void)
 	};
 	static uint8_t dir = RIGHT;
 	static uint8_t dir_draw = 0U;
-	s_UsbDeviceHidMouse.buffer[0] = 0U;
+	s_UsbDeviceHidMouse.buffer[ 0 ] = 0U;
 
+    //state machine
 	switch (dir)
 	{
 	case RIGHT:
+
 		/* Move right. Increase X value. */
-		s_UsbDeviceHidMouse.buffer[1] = 15U;
-		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		s_UsbDeviceHidMouse.buffer[ 1 ] = 15U;
+		s_UsbDeviceHidMouse.buffer[ 2 ] = 0U;
 		x++;
-		if (x > 99U)
+		if ( x > 99U )
 		{
 			dir = UP;
 		}
 		break;
+
 	case DOWN:
+
 		/* Move down. Increase Y value. */
-		s_UsbDeviceHidMouse.buffer[1] = 0U;
-		s_UsbDeviceHidMouse.buffer[2] = 5U;
+		s_UsbDeviceHidMouse.buffer[ 1 ] = 0U;
+		s_UsbDeviceHidMouse.buffer[ 2 ] = 5U;
 		y++;
-		if (y > 99U)
+		if ( y > 99U )
 		{
 			dir = WAIT;
 		}
 		break;
+
 	case LEFT:
+
 		/* Move left. Discrease X value. */
-		s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(-8);
-		s_UsbDeviceHidMouse.buffer[2] = 0U;
+		s_UsbDeviceHidMouse.buffer[ 1 ] = (uint8_t)( -8 );
+		s_UsbDeviceHidMouse.buffer[ 2 ] = 0U;
 		x--;
-		if (x < 2U)
+		if ( x < 2U )
 		{
 			dir = DOWN;
 		}
 		break;
+
 	case UP:
+
 		/* Move up. Discrease Y value. */
-		s_UsbDeviceHidMouse.buffer[1] = 0U;
-		s_UsbDeviceHidMouse.buffer[2] = (uint8_t)(-10);
+		s_UsbDeviceHidMouse.buffer[ 1 ] = 0U;
+		s_UsbDeviceHidMouse.buffer[ 2 ] = (uint8_t)( -10 );
 		y--;
-		if (y < 2U)
+		if ( y < 2U )
 		{
 			dir = LEFT;
 		}
 		break;
+
 	case WAIT:
-		s_UsbDeviceHidMouse.buffer[1] = 0U;
-		s_UsbDeviceHidMouse.buffer[2] = 0U;
-		if (FlagLMouseSelect)
+		s_UsbDeviceHidMouse.buffer[ 1 ] = 0U;
+		s_UsbDeviceHidMouse.buffer[ 2 ] = 0U;
+		if ( FlagLMouseSelect )
 		{
 			dir = SELECT;
 			x = 0U;
 			y = 0U;
 		}
-		if (FlagMSpaint)
+		if ( FlagMSpaint )
 		{
 			dir = DRAW;
 			x = 0U;
 			y = 0U;
 		}
 		break;
+
 	case DRAW:
-		switch (dir_draw)
+		switch ( dir_draw )
 		{
 		case 0:
 			/* Move right. Increase X value. */
-			s_UsbDeviceHidMouse.buffer[0] = 1U;
-			s_UsbDeviceHidMouse.buffer[1] = 2U;
-			s_UsbDeviceHidMouse.buffer[2] = 0U;
+			s_UsbDeviceHidMouse.buffer[ 0 ] = 1U;
+			s_UsbDeviceHidMouse.buffer[ 1 ] = 2U;
+			s_UsbDeviceHidMouse.buffer[ 2 ] = 0U;
 			x++;
-			if (x > 99U)
+
+			if ( x > 99U )
 			{
 				dir_draw++;
 			}
 			break;
+
 		case 1:
 			/* Move down. Increase Y value. */
-			s_UsbDeviceHidMouse.buffer[0] = 1U;
-			s_UsbDeviceHidMouse.buffer[1] = 0U;
-			s_UsbDeviceHidMouse.buffer[2] = 2U;
+			s_UsbDeviceHidMouse.buffer[ 0 ] = 1U;
+			s_UsbDeviceHidMouse.buffer[ 1 ] = 0U;
+			s_UsbDeviceHidMouse.buffer[ 2 ] = 2U;
 			y++;
-			if (y > 99U)
+
+			if ( y > 99U )
 			{
 				dir_draw++;
 			}
 			break;
+
 		case 2:
 			/* Move left. Discrease X value. */
-			s_UsbDeviceHidMouse.buffer[0] = 1U;
-			s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(-2);
-			s_UsbDeviceHidMouse.buffer[2] = 0U;
+			s_UsbDeviceHidMouse.buffer[ 0 ] = 1U;
+			s_UsbDeviceHidMouse.buffer[ 1 ] = (uint8_t)( -2 );
+			s_UsbDeviceHidMouse.buffer[ 2 ] = 0U;
 			x--;
-			if (x < 2U)
+
+			if ( x < 2U )
 			{
 				dir_draw++;
 			}
 			break;
+
 		case 3:
 			/* Move up. Discrease Y value. */
-			s_UsbDeviceHidMouse.buffer[0] = 1U;
-			s_UsbDeviceHidMouse.buffer[1] = 0U;
-			s_UsbDeviceHidMouse.buffer[2] = (uint8_t)(-2);
+			s_UsbDeviceHidMouse.buffer[ 0 ] = 1U;
+			s_UsbDeviceHidMouse.buffer[ 1 ] = 0U;
+			s_UsbDeviceHidMouse.buffer[ 2 ] = (uint8_t)( -2 );
 			y--;
-			if (y < 2U)
+
+			if ( y < 2U )
 			{
 				dir = WAIT;
 				FlagMSpaint = pdFALSE;
@@ -199,13 +209,15 @@ static usb_status_t USB_DeviceHidMouseAction(void)
 			break;
 		}
 		break;
+
 		case SELECT:
 			x++;
-			s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(-2);
-			s_UsbDeviceHidMouse.buffer[2] = 0U;
-			if (x > 2)
+			s_UsbDeviceHidMouse.buffer[ 1 ] = (uint8_t)( -2 );
+			s_UsbDeviceHidMouse.buffer[ 2 ] = 0U;
+
+			if ( x > 2 )
 			{
-				s_UsbDeviceHidMouse.buffer[0] = 4U;
+				s_UsbDeviceHidMouse.buffer[ 0 ] = 4U;
 				dir = WAIT;
 			}
 
@@ -213,8 +225,9 @@ static usb_status_t USB_DeviceHidMouseAction(void)
 		default:
 			break;
 	}
-	return USB_DeviceHidSend(s_UsbDeviceComposite->hidMouseHandle, USB_HID_MOUSE_ENDPOINT_IN,
-			s_UsbDeviceHidMouse.buffer, USB_HID_MOUSE_REPORT_LENGTH);
+	return USB_DeviceHidSend(s_UsbDeviceComposite->hidMouseHandle,
+			USB_HID_MOUSE_ENDPOINT_IN,s_UsbDeviceHidMouse.buffer,
+			USB_HID_MOUSE_REPORT_LENGTH);
 }
 
 /* The device HID class callback */
@@ -258,7 +271,8 @@ usb_status_t USB_DeviceHidMouseSetConfigure(class_handle_t handle, uint8_t confi
 }
 
 /* Set interface */
-usb_status_t USB_DeviceHidMouseSetInterface(class_handle_t handle, uint8_t interface, uint8_t alternateSetting)
+usb_status_t USB_DeviceHidMouseSetInterface(class_handle_t handle, uint8_t interface,
+		uint8_t alternateSetting)
 {
 	if (USB_HID_KEYBOARD_INTERFACE_INDEX == interface)
 	{

@@ -35,24 +35,13 @@
 #include "usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
-
 #include "usb_device_class.h"
 #include "usb_device_hid.h"
-
 #include "usb_device_descriptor.h"
-
 #include "composite.h"
-
 #include "hid_mouse.h"
 #include "hid_keyboard.h"
 
-/*******************************************************************************
- * Definitions
- ******************************************************************************/
-
-/*******************************************************************************
- * Prototypes
- ******************************************************************************/
 
 /*******************************************************************************
  * Variables
@@ -145,74 +134,70 @@ usb_device_class_struct_t g_UsbDeviceHidMouseConfig = {
 };
 
 USB_DMA_INIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE)
+
 uint8_t g_UsbDeviceHidMouseReportDescriptor[] = {
-    0x05U, 0x01U, /* Usage Page (Generic Desktop)*/
-    0x09U, 0x02U, /* Usage (Mouse) */
-    0xA1U, 0x01U, /* Collection (Application) */
-    0x09U, 0x01U, /* Usage (Pointer) */
 
-    0xA1U, 0x00U, /* Collection (Physical) */
-    0x05U, 0x09U, /* Usage Page (Buttons) */
-    0x19U, 0x01U, /* Usage Minimum (01U) */
-    0x29U, 0x03U, /* Usage Maximum (03U) */
+    0x05U, 0x01U, 		/* Usage Page (Generic Desktop)*/
+    0x09U, 0x02U, 		/* Usage (Mouse) */
+    0xA1U, 0x01U, 		/* Collection (Application) */
+    0x09U, 0x01U, 		/* Usage (Pointer) */
+    0xA1U, 0x00U, 		/* Collection (Physical) */
+    0x05U, 0x09U, 		/* Usage Page (Buttons) */
+    0x19U, 0x01U,		/* Usage Minimum (01U) */
+    0x29U, 0x03U, 		/* Usage Maximum (03U) */
+    0x15U, 0x00U, 		/* logical Minimum (0U) */
+    0x25U, 0x01U, 		/* logical Maximum (1U) */
+    0x95U, 0x03U, 		/* Report Count (3U) */
+    0x75U, 0x01U, 		/* Report Size (1U) */
+    0x81U, 0x02U, 		/* Input(Data, Variable, Absolute) 3U button bit fields */
+    0x95U, 0x01U, 		/* Report count (1U) */
+    0x75U, 0x05U, 		/* Report Size (5U) */
+    0x81U, 0x01U, 		/* Input (Constant), 5U constant field */
+    0x05U, 0x01U, 		/* Usage Page (Generic Desktop) */
+    0x09U, 0x30U, 		/* Usage (X) */
+    0x09U, 0x31U, 		/* Usage (Y) */
+    0x09U, 0x38U, 		/* Usage (Z) */
+    0x15U, 0x81U, 		/* Logical Minimum (-127) */
+    0x25U, 0x7FU, 		/* Logical Maximum (127) */
+    0x75U, 0x08U, 		/* Report Size (8U) */
+    0x95U, 0x03U, 		/* Report Count (3U) */
+    0x81U, 0x06U, 		/* Input(Data, Variable, Relative), three position bytes (X & Y & Z)*/
+    0xC0U,        		/* end collection, Close Pointer collection*/
+    0xC0U         		/* end collection, Close Mouse collection */
 
-    0x15U, 0x00U, /* logical Minimum (0U) */
-    0x25U, 0x01U, /* logical Maximum (1U) */
-    0x95U, 0x03U, /* Report Count (3U) */
-    0x75U, 0x01U, /* Report Size (1U) */
-
-    0x81U, 0x02U, /* Input(Data, Variable, Absolute) 3U button bit fields */
-    0x95U, 0x01U, /* Report count (1U) */
-    0x75U, 0x05U, /* Report Size (5U) */
-    0x81U, 0x01U, /* Input (Constant), 5U constant field */
-
-    0x05U, 0x01U, /* Usage Page (Generic Desktop) */
-    0x09U, 0x30U, /* Usage (X) */
-    0x09U, 0x31U, /* Usage (Y) */
-    0x09U, 0x38U, /* Usage (Z) */
-
-    0x15U, 0x81U, /* Logical Minimum (-127) */
-    0x25U, 0x7FU, /* Logical Maximum (127) */
-    0x75U, 0x08U, /* Report Size (8U) */
-    0x95U, 0x03U, /* Report Count (3U) */
-
-    0x81U, 0x06U, /* Input(Data, Variable, Relative), three position bytes (X & Y & Z)*/
-    0xC0U,        /* end collection, Close Pointer collection*/
-    0xC0U         /* end collection, Close Mouse collection */
 };
 
 /* HID keyboard report descriptor */
 USB_DMA_INIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE)
+
 uint8_t g_UsbDeviceHidKeyboardReportDescriptor[] = {
-    0x05U, 0x01U, /* Usage Page (Generic Desktop)*/
-    0x09U, 0x06U, /* Usage (Keyboard) */
-    0xA1U, 0x01U, /* Collection (Application) */
-    0x75U, 0x01U, /* Report Size (1U) */
-    0x95U, 0x08U, /* Report Count (8U) */
-    0x05U, 0x07U, /* Usage Page (Key Codes) */
-    0x19U, 0xE0U, /* Usage Minimum (224U) */
-    0x29U, 0xE7U, /* Usage Maximum (231U) */
 
-    0x15U, 0x00U, /* Logical Minimum (0U) */
-    0x25U, 0x01U, /* Logical Maximum (1U) */
-    0x81U, 0x02U, /* Input(Data, Variable, Absolute) Modifier byte */
+    0x05U, 0x01U, 		/* Usage Page (Generic Desktop)*/
+    0x09U, 0x06U, 		/* Usage (Keyboard) */
+    0xA1U, 0x01U, 		/* Collection (Application) */
+    0x75U, 0x01U, 		/* Report Size (1U) */
+    0x95U, 0x08U, 		/* Report Count (8U) */
+    0x05U, 0x07U, 		/* Usage Page (Key Codes) */
+    0x19U, 0xE0U, 		/* Usage Minimum (224U) */
+    0x29U, 0xE7U, 		/* Usage Maximum (231U) */
+    0x15U, 0x00U, 		/* Logical Minimum (0U) */
+    0x25U, 0x01U, 		/* Logical Maximum (1U) */
+    0x81U, 0x02U, 		/* Input(Data, Variable, Absolute) Modifier byte */
+    0x95U, 0x01U, 		/* Report count (1U) */
+    0x75U, 0x08U, 		/* Report Size (8U) */
+    0x81U, 0x01U, 		/* Input (Constant), Reserved byte */
+    0x95U, 0x05U, 		/* Report count (5U) */
+    0x75U, 0x01U, 		/* Report Size (1U) */
+    0x95U, 0x06U, 		/* Report count (6U) */
+    0x75U, 0x08U, 		/* Report Size (8U) */
+    0x15U, 0x00U, 		/* logical Minimum (0U) */
+    0x25U, 0xFFU, 		/* logical Maximum (255U) */
+    0x05U, 0x07U, 		/* Usage Page (Key Codes) */
+    0x19U, 0x00U, 		/* Usage Minimum (0U) */
+    0x29U, 0xFFU, 		/* Usage Maximum (255U) */
+    0x81U, 0x00U, 		/* Input(Data, Array), Key arrays(6U bytes)*/
+    0xC0U,        		/* end collection */
 
-    0x95U, 0x01U, /* Report count (1U) */
-    0x75U, 0x08U, /* Report Size (8U) */
-    0x81U, 0x01U, /* Input (Constant), Reserved byte */
-    0x95U, 0x05U, /* Report count (5U) */
-    0x75U, 0x01U, /* Report Size (1U) */
-
-    0x95U, 0x06U, /* Report count (6U) */
-    0x75U, 0x08U, /* Report Size (8U) */
-    0x15U, 0x00U, /* logical Minimum (0U) */
-    0x25U, 0xFFU, /* logical Maximum (255U) */
-    0x05U, 0x07U, /* Usage Page (Key Codes) */
-    0x19U, 0x00U, /* Usage Minimum (0U) */
-    0x29U, 0xFFU, /* Usage Maximum (255U) */
-
-    0x81U, 0x00U, /* Input(Data, Array), Key arrays(6U bytes)*/
-    0xC0U,        /* end collection */
 };
 
 USB_DMA_INIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE)

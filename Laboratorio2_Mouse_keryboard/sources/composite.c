@@ -35,37 +35,20 @@
 #include "usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
-
 #include "usb_device_class.h"
 #include "usb_device_hid.h"
-
 #include "usb_device_ch9.h"
 #include "usb_device_descriptor.h"
-
 #include "composite.h"
-
 #include "hid_keyboard.h"
 #include "hid_mouse.h"
-
 #include "fsl_device_registers.h"
 #include "clock_config.h"
 #include "board.h"
 #include "fsl_debug_console.h"
-
 #include <stdio.h>
 #include <stdlib.h>
-#if (defined(FSL_FEATURE_SOC_SYSMPU_COUNT) && (FSL_FEATURE_SOC_SYSMPU_COUNT > 0U))
-#include "fsl_sysmpu.h"
-#endif /* FSL_FEATURE_SOC_SYSMPU_COUNT */
-
-#if (USB_DEVICE_CONFIG_HID < 2U)
-#error USB_DEVICE_CONFIG_HID need to > 1U, Please change the MARCO USB_DEVICE_CONFIG_HID in file "usb_device_config.h".
-#endif
-
 #include "pin_mux.h"
-/*******************************************************************************
- * Definitions
- ******************************************************************************/
 
 /*******************************************************************************
  * Prototypes
@@ -310,10 +293,6 @@ static usb_status_t USB_DeviceCallback(usb_device_handle handle, uint32_t event,
 static void USB_DeviceApplicationInit(void)
 {
     USB_DeviceClockInit();
-#if (defined(FSL_FEATURE_SOC_SYSMPU_COUNT) && (FSL_FEATURE_SOC_SYSMPU_COUNT > 0U))
-    SYSMPU_Enable(SYSMPU, 0);
-#endif /* FSL_FEATURE_SOC_SYSMPU_COUNT */
-
     /* Set composite device to default state */
     g_UsbDeviceComposite.speed = USB_SPEED_FULL;
     g_UsbDeviceComposite.attach = 0U;
